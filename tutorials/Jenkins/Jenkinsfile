@@ -1,0 +1,45 @@
+pipeline {
+  agent any
+  environment {
+    REGISTRY = 'registry.example.com'
+    IMAGE = 'myapp'
+  }
+  stages {
+    stage('Checkout') {
+      steps {
+        git 'https://github.com/org/repo.git'
+      }
+    }
+    stage('Build') {
+      steps {
+        sh 'docker build -t $IMAGE:$BUILD_NUMBER .'
+      }
+    }
+    stage('Test') {
+      steps {
+        sh 'docker run --rm $IMAGE:$BUILD_NUMBER npm test'
+      }
+    }
+    stage('Push') {
+      steps {
+        sh 'docker push $REGISTRY/$IMAGE:$BUILD_NUMBER'
+      }
+    }
+    stage('Deploy') {
+      steps {
+        sh 'kubectl set image deployment/myapp myapp=$REGISTRY/$IMAGE:$BUILD_NUMBER'
+      }
+    }
+  }
+  post {
+    success {
+      echo 'Success'
+    }
+    failure {
+      echo 'Failure'
+    }
+    always {
+      cleanWs()
+    }
+  }
+}

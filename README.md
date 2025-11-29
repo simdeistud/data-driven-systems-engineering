@@ -37,6 +37,7 @@ The course introduces students to **data-driven approaches in systems engineerin
 ├── data/              # Example datasets used in exercises
 ├── src/               # Python scripts for reusable functions
 ├── requirements.txt   # Python dependencies
+├── tutorials          # Docker, Jenkins and GitHub Actions
 └── README.md          # Course documentation
 ```
 
